@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: splitsmart-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: splitsmart
+      POSTGRES_PASSWORD: splitsmart
+      POSTGRES_DB: splitsmart
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U splitsmart -d splitsmart"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      context: ./server
+    container_name: splitsmart-server
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./server/.env
+    volumes:
+      - uploads_data:/app/uploads
+    restart: always
+
+volumes:
+  postgres_data:
+  uploads_data:
+ 
