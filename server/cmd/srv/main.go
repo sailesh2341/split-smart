@@ -24,7 +24,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Run migrations.
 	if err := runMigrations(db); err != nil {
 		log.Fatal(err)
 	}
@@ -34,15 +33,12 @@ func main() {
 		http.StripPrefix("/uploads/", http.FileServer(http.Dir("uploads"))),
 	)
 
-	// Health.
 	router.HandleFunc("/health", handlers.HealthHandler).Methods("GET")
 
-	// Auth.
 	authHandler := &handlers.AuthHandler{DB: db}
 	router.HandleFunc("/auth/register", authHandler.Register).Methods("POST")
 	router.HandleFunc("/auth/login", authHandler.Login).Methods("POST")
 
-	// Protected routes.
 	api := router.PathPrefix("/api").Subrouter()
 	api.Use(handlers.JWTMiddleware)
 

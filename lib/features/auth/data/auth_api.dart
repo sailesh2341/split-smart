@@ -17,7 +17,6 @@ class AuthApi {
       baseUrl: 'http://10.0.2.2:8080',
       headers: {'Content-Type': 'application/json'},
       responseType: ResponseType.plain,
-      // Force plain responses so decoding stays consistent.
     ),
   );
 
@@ -25,7 +24,6 @@ class AuthApi {
 
   AuthApi(this._storage);
 
-  // LOGIN
   Future<void> login(String email, String password) async {
     final res = await _dio.post(
       '/auth/login',
@@ -34,12 +32,10 @@ class AuthApi {
 
     dynamic body = res.data;
 
-    // Decode manually if String.
     if (body is String) {
       body = jsonDecode(body);
     }
 
-    // Handle wrapped response.
     if (body is Map<String, dynamic> && body.containsKey('data')) {
       body = body['data'];
     }
@@ -57,17 +53,14 @@ class AuthApi {
     await _storage.save(token);
   }
 
-  // LOGOUT
   Future<void> logout() async {
     await _storage.clear();
   }
 
-  // READ TOKEN
   Future<String?> readToken() {
     return _storage.read();
   }
 
-  // GET ME
   Future<User> getMe() async {
     final token = await _storage.read();
 

@@ -16,7 +16,6 @@ type MeResponse struct {
 	Email string `json:"email"`
 }
 
-// GET /api/me
 func (h *MeHandler) Me(w http.ResponseWriter, r *http.Request) {
 	userID := GetUserID(r)
 	if userID == "" {

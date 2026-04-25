@@ -1,6 +1,6 @@
 class ExpenseFile {
   final String url;
-  final String type; // image / pdf
+  final String type;
 
   ExpenseFile({required this.url, required this.type});
 

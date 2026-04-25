@@ -9,9 +9,8 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtSecret = []byte("super-secret-key-change-me") // move to env later
+var jwtSecret = []byte("super-secret-key-change-me")
 
-// GenerateJWT creates a signed JWT for a user.
 func GenerateJWT(userID string) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id": userID,
@@ -22,7 +21,6 @@ func GenerateJWT(userID string) (string, error) {
 	return token.SignedString(jwtSecret)
 }
 
-// JWTMiddleware protects routes.
 func JWTMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		auth := r.Header.Get("Authorization")
@@ -65,7 +63,6 @@ func JWTMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-// GetUserID reads user_id from context.
 func GetUserID(r *http.Request) string {
 	id, _ := r.Context().Value("user_id").(string)
 	return id
